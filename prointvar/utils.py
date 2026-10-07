@@ -721,7 +721,9 @@ def exclude_columns(data, excluded=()):
     if excluded is not None:
         assert hasattr(excluded, '__iter__')
         try:
-            table = table.drop(list(excluded), axis=1)
+            # errors="ignore": newer PDBe mmCIFs lack the *_esd columns, and
+            # pandas >= 1.0 raises KeyError (not ValueError) for missing labels
+            table = table.drop(list(excluded), axis=1, errors="ignore")
         except ValueError:
             # most likely theses are not in there
             pass

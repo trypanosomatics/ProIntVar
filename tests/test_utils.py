@@ -548,6 +548,13 @@ class TestUTILS(unittest.TestCase):
         self.assertEqual(len(self.mock_df.columns), 2)
         self.assertNotIn("type", self.mock_df)
 
+    def test_exclude_columns_missing(self):
+        """Columns that are not in the table are ignored (e.g., *_esd columns absent from newer PDBe mmCIFs)."""
+        self.assertEqual(len(self.mock_df.columns), 3)
+        self.mock_df = self.exclude_columns(self.mock_df, excluded=("type", "Cartn_x_esd", "occupancy_esd"))
+        self.assertEqual(len(self.mock_df.columns), 2)
+        self.assertNotIn("type", self.mock_df)
+
     def test_get_rsa(self):
         rsa = self.get_rsa(10.0, "A", method="Sander")
         self.assertEqual(9.434, rsa)
